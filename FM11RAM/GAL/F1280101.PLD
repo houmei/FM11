@@ -1,0 +1,68 @@
+Name		F1280101;
+PartNo		FM11RAM;
+Revision	01;
+Date		21/07/01;
+Designer	Katunori Takesita;
+Company		;
+Assembly	;
+Location	;
+Device		G16V8;
+
+/*
+ * SRAM 128KBx4 config.
+ * SRAM U1 .. $00000 - $1FFFF
+ * SRAM U2 .. $20000 - $3FFFF
+ * SRAM U3 .. $40000 - $5FFFF
+ * SRAM U4 .. $60000 - $7FFFF
+ * D128 disable U1
+ * SEL  +$80000
+ *
+ * SRAM 512KBx2 config.
+ * SRAM U1 .. $00000 - $7FFFF
+ * SRAM U2 .. $80000 - $FFFFF
+ * SRAM U3 .. none
+ * SRAM U4 .. none
+ * D128 disable $00000-$1FFFF
+ */
+
+
+/* INPUTS */
+Pin 1 = !EB;
+Pin 2 = RWB;
+Pin 3 = AB17;
+Pin 4 = AB18;
+Pin 5 = AB19;
+Pin 6 = !RAMIHB;
+Pin 7 = !R512;
+Pin 8 = !D128;
+Pin 9 = !SEL;
+Pin 11 = !EN;
+
+/* OUTPUTS */
+Pin 19 = A18NC;
+Pin 18 = A17CS2;
+Pin 17 = !WE;
+Pin 16 = !OE;
+Pin 15 = !CE3;
+Pin 14 = !CE2;
+Pin 13 = !CE1;
+Pin 12 = !CE0;
+
+
+OE = EN & EB &  RWB ;
+WE = EN & EB & !RWB ;
+
+/* SRAM 128KB x4 or 512KB x2 */
+
+CE0 = EN & !R512 & !RAMIHB & !AB18 & !AB17 & !D128 # EN & R512 & !RAMIHB & !AB19 & !(D128 & !AB18 & !AB17) ;
+
+CE1 = EN & !R512 & !RAMIHB & !AB18 &  AB17 # EN & R512 & !RAMIHB &  AB19 ;
+
+CE2 = EN & !R512 & !RAMIHB & AB18 & !AB17 ;
+CE3 = EN & !R512 & !RAMIHB & AB18 &  AB17 ;
+
+A18NC = EN & R512 & AB18 # !R512 ;
+A17CS2 = EN & !R512 & SEL & AB19 # EN & !R512 & !SEL & !AB19 # EN & R512 & AB17 ;
+
+
+/* END */
